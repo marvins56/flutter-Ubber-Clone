@@ -152,27 +152,33 @@ class LoginScreen extends StatelessWidget {
         displayToastMsg("Error : " + errMsg.toString(), context);
       }))
           .user;
-      if (firebaseUser != null) {
-        usersRef
-            .child(firebaseUser.uid)
-            .once()
-            .then((DataSnapshot snap) {
-                  if (snap.value != null) {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, MainScreen.idScreen, (route) => false);
-                    displayToastMsg("Login successful", context);
-                  } else {
-                    Navigator.pop(context);
-                    _firebaseAuth.signOut();
-                    displayToastMsg("invalid email / password", context);
-                  }
-                });
+ if (firebaseUser != null) {
+//user created saving data to firebase
+        usersRef.child(firebaseUser.uid);
+        //check in database if user exixts or not
+        // print(firebaseUser.uid);
+        //saving data to databse
+        usersRef.child(firebaseUser.uid).once().whenComplete(() {
+          // => (DataSnapshot snap)
+          // if (snap.value != null) {
+          //if user exixts
+          Navigator.pushNamedAndRemoveUntil(
+              context, MainScreen.idScreen, (route) => false);
+          displayToastMsg("Login successful", context);
+          // } else {
+          //   //if user doesnt exist
+          //   Navigator.pop(context);
+          //   _firebaseAuth.signOut();
+          //   displayToastMsg("invalid email / password", context);
+          // }
+        });
       } else {
         Navigator.pop(context);
-        displayToastMsg("USER LOGIN FAILED", context);
+        //error display
+        displayToastMsg("user creation failed", context);
       }
     } catch (e) {
-      displayToastMsg(e.toString(), context);
+      displayToastMsg("invalid credentials / " + e.toString(), context);
     }
   }
 
