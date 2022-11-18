@@ -27,9 +27,7 @@ class MyApp extends StatelessWidget {
           fontFamily: "Bald Bold",
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity),
-      initialRoute: FirebaseAuth.instance.currentUser == null
-            ? LoginScreen.idScreen
-            : MainScreen.idScreen,
+      initialRoute:  MainScreen.idScreen,
       routes: {
         RegisterationScreen.idScreen: (context) => RegisterationScreen(),
         LoginScreen.idScreen: (context) => LoginScreen(),
@@ -39,3 +37,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+// FirebaseAuth.instance.currentUser == null
+//             ? LoginScreen.idScreen
+//             :
