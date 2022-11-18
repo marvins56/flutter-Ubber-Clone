@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ubberapp/AllWidgets/Divider.dart';
+import 'package:ubberapp/Assistants/assistantMethods.dart';
 
 class MainScreen extends StatefulWidget {
   static const String idScreen = "mainScreen";
@@ -20,7 +21,7 @@ class _MainScreenState extends State<MainScreen> {
   GlobalKey<ScaffoldState> scafoldkey = new GlobalKey<ScaffoldState>();
 
 //get current position of user
-
+  double BottomPaddingOfMap = 0;
   late Position currentPosition;
   var geoLocator = Geolocator();
   //Get users current location
@@ -37,6 +38,8 @@ class _MainScreenState extends State<MainScreen> {
         new CameraPosition(target: latLatPosition, zoom: 14);
     newGoogleMapController
         .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+    String address = await AssistantMethods.searchCordinateAddress(position);
+    print("this is your address :: " + address);
   }
 
 //google maps
@@ -128,6 +131,7 @@ class _MainScreenState extends State<MainScreen> {
       body: Stack(
         children: [
           GoogleMap(
+            padding: EdgeInsets.only(bottom: BottomPaddingOfMap),
             mapType: MapType.normal,
             myLocationButtonEnabled: true,
             initialCameraPosition: _kGooglePlex,
@@ -138,46 +142,49 @@ class _MainScreenState extends State<MainScreen> {
             onMapCreated: (GoogleMapController controller) {
               _controllerGooglemap.complete(controller);
               newGoogleMapController = controller;
-
+              //on ma creation
+              setState(() {
+                BottomPaddingOfMap = 300.0;
+              });
               //update user location
               LocatePosition();
             },
           ),
 
           //hamburger button
-          Positioned(
-            top: 45.0,
-            left: 22.0,
-            child: GestureDetector(
-              onTap: () {
-                scafoldkey.currentState?.openDrawer();
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(
-                    22.0,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black54,
-                      blurRadius: 6.0,
-                      spreadRadius: 0.5,
-                      offset: Offset(0.7, 0.7),
-                    ),
-                  ],
-                ),
-                child: CircleAvatar(
-                  backgroundColor: Colors.white,
-                  child: Icon(
-                    Icons.menu,
-                    color: Colors.black,
-                  ),
-                  radius: 20.0,
-                ),
-              ),
-            ),
-          ),
+          // Positioned(
+          //   top: 45.0,
+          //   left: 22.0,
+          //   child: GestureDetector(
+          //     onTap: () {
+          //       scafoldkey.currentState?.openDrawer();
+          //     },
+          //     child: Container(
+          //       decoration: BoxDecoration(
+          //         color: Colors.white,
+          //         borderRadius: BorderRadius.circular(
+          //           22.0,
+          //         ),
+          //         boxShadow: [
+          //           BoxShadow(
+          //             color: Colors.black54,
+          //             blurRadius: 6.0,
+          //             spreadRadius: 0.5,
+          //             offset: Offset(0.7, 0.7),
+          //           ),
+          //         ],
+          //       ),
+          //       child: CircleAvatar(
+          //         backgroundColor: Colors.white,
+          //         child: Icon(
+          //           Icons.menu,
+          //           color: Colors.black,
+          //         ),
+          //         radius: 20.0,
+          //       ),
+          //     ),
+          //   ),
+          // ),
 
           Positioned(
             left: 0.0,
